@@ -49,8 +49,8 @@ void setDriveMotors() {
     setDrive(0, 0);
 
   //smoothing and analog curve equation
-	right_stick_smoothed = ((std::exp(-t / 12.5102293) + std::exp((std::abs(direction) - 132.55) / 69) * (1 - std::exp(-t / 10))) * rightX * 0.4) + (right_stick_prev * 0.6);
-	left_stick_smoothed =  ((std::exp(-d / 10) + std::exp((std::abs(leftY) - 100) / 10) * (1 - std::exp(-d / 10))) * leftY * 0.4) + (left_stick_prev * 0.6);
+	right_stick_smoothed = ((std::exp(-t / 12.5102293) + std::exp((std::abs(direction) - 132.55) / 69) * (1 - std::exp(-t / 10))) * direction * 0.4) + (right_stick_prev * 0.6);
+	left_stick_smoothed =  ((std::exp(-d / 10) + std::exp((std::abs(power) - 100) / 10) * (1 - std::exp(-d / 10))) * power * 0.4) + (left_stick_prev * 0.6);
 	right_stick_prev = right_stick_smoothed;
 	left_stick_prev = left_stick_smoothed;
 	//end smoothing

@@ -112,9 +112,10 @@ void opcontrol() {
 
 	while(true) {
 		setDriveMotors();
-		moveLift();
-		moveClamp();
-		pros::delay(10);
+
+		//moveLift();
+		//moveClamp();
+		pros::delay(5);
 
 /***************************************************************************************
 - RUN METHODS FOR MOTORS YOU HAVE ADDED ON YOUR OWN                                    *

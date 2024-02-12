@@ -14,13 +14,15 @@ int right_stick_smoothed = 0;
 int left_stick_smoothed = 0;
 float left_stick_prev = 0;
 float right_stick_prev = 0;
+int straightPathNormal = 0;
+int goingStraight = 0;
 
 int deadzone = 10;
 int t = 18; //turningCurve --> change to adjust sensitivity of turning
 int d = 2; //drivingCurve --> change to adjust sensitivity of forward / backward movement
 
 //DRIVE
-void setDrive(int left, int right) {
+void setDrive(float left, float right) {
   backLeft = left;
   backRight = right;
   frontLeft = left;
@@ -55,13 +57,35 @@ void setDriveMotors() {
 	left_stick_prev = left_stick_smoothed;
 	//end smoothing
 
-  setDrive(
-    defaultDriveCurve(left_stick_smoothed + right_stick_smoothed, 4),
-    defaultDriveCurve(left_stick_smoothed - right_stick_smoothed, 4)
-    );
+  //automatically correct a deviating straight path using IMU, in case wheels slip or something minor
+  if (direction < deadzone + 5 && direction > -deadzone - 5 && goingStraight == 0) {
+    //if the robot is not already correcting itself for a minor deviation, set the heading normal to current IMU heading, set the flag to 1
+      straightPathNormal = inertial.get_heading();
+      goingStraight = 1;
+    }
+  //If the flag is set to 1 then do the following
+  if (goingStraight == 1) {
+    //if the robot is deviating, then correct by increasing the power to the side that is deviating
+    if (inertial.get_heading() > straightPathNormal || inertial.get_heading() < straightPathNormal) {
+      //correct for left
+      if (inertial.get_heading() > straightPathNormal) {
+        right_stick_smoothed = right_stick_smoothed + 2;
+        }
+      //correct for right
+      else if (inertial.get_heading() < straightPathNormal) {
+        right_stick_smoothed = right_stick_smoothed - 2;
+        }
+      //if the robot is back to normal, set the flag to 0
+      else if (abs(inertial.get_heading() - straightPathNormal) > 5) {
+        goingStraight = 0;
+        }
+      }
+    }
 
-  //todo: implement a functionality to automatically correct a straight path using IMU, in case wheels slip or something
-}
+  //Finally set the drive motors' values
+  setDrive(defaultDriveCurve(left_stick_smoothed + right_stick_smoothed, 4), defaultDriveCurve(left_stick_smoothed - right_stick_smoothed, 4));
+
+};
 
 
 void moveLift() {

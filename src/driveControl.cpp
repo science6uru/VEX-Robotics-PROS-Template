@@ -10,12 +10,29 @@ double powerMultiplier = 1;
 double rightMultiplier = 1;
 double leftMultiplier = 1;
 
+int right_stick_smoothed = 0;
+int left_stick_smoothed = 0;
+float left_stick_prev = 0;
+float right_stick_prev = 0;
+
+int deadzone = 10;
+int t = 18; //turningCurve --> change to adjust sensitivity of turning
+int d = 2; //drivingCurve --> change to adjust sensitivity of forward / backward movement
+
 //DRIVE
 void setDrive(int left, int right) {
   backLeft = left;
   backRight = right;
   frontLeft = left;
   frontRight = right;
+}
+
+float defaultDriveCurve(float input, float scale) {
+    if (scale != 0) {
+        return (powf(2.718, -(scale / 10)) + powf(2.718, (fabs(input) - 127) / 10) * (1 - powf(2.718, -(scale / 10)))) *
+               input;
+    }
+    return input;
 }
 
 void setDriveMotors() {
@@ -25,15 +42,23 @@ void setDriveMotors() {
 
   power *= powerMultiplier;
 
-  int left = power + (direction * leftMultiplier);
-  int right = power - (direction * rightMultiplier);
-
-  if (abs(power) <= 20)
+  //Deadzone check
+  if (abs(power) <= deadzone)
     setDrive(0, 0);
-  if(abs(direction) <= 20)
+  if(abs(direction) <= deadzone)
     setDrive(0, 0);
 
-  setDrive(left, right);
+  //smoothing and analog curve equation
+	right_stick_smoothed = ((std::exp(-t / 12.5102293) + std::exp((std::abs(direction) - 132.55) / 69) * (1 - std::exp(-t / 10))) * rightX * 0.4) + (right_stick_prev * 0.6);
+	left_stick_smoothed =  ((std::exp(-d / 10) + std::exp((std::abs(leftY) - 100) / 10) * (1 - std::exp(-d / 10))) * leftY * 0.4) + (left_stick_prev * 0.6);
+	right_stick_prev = right_stick_smoothed;
+	left_stick_prev = left_stick_smoothed;
+	//end smoothing
+
+  setDrive(
+    defaultDriveCurve(left_stick_smoothed + right_stick_smoothed, 4),
+    defaultDriveCurve(left_stick_smoothed - right_stick_smoothed, 4)
+    );
 
   //todo: implement a functionality to automatically correct a straight path using IMU, in case wheels slip or something
 }

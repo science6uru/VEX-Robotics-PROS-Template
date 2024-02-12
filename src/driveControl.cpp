@@ -34,6 +34,8 @@ void setDriveMotors() {
     setDrive(0, 0);
 
   setDrive(left, right);
+
+  //todo: implement a functionality to automatically correct a straight path using IMU, in case wheels slip or something
 }
 
 

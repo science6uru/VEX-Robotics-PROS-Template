@@ -1,22 +1,23 @@
-# VEX-Robotics-PROS-Template
-Easy code template for VEX Robotics using PROS and OKAPI namespace
+# Team 5408*'s PROS Repository
+Made from a basic template PROS V5 project.
 
-This is a basic 4 motor tank drive code with a 1 motor lift
-This code can easily changed to make a 2 motor lift, to have 
-a 2nd lift, or to add any other motors. There is also a 
-Intertial sensor that will help your bot move more consistently
+## Features
+stuff you can do
 
-There is piston code, you can choose to leave it, delete it, or comment it out.
+### Precision control with IMU
+The IMU's internal gyroscope is used for all movement operations, in autonomous and driver control.
 
-Everything is customizable
+How it's implemented
+- Wheel slip angle correction during straight driving, auton and driver control
+- Precision turning and automatic error compensation using global angles during auton
 
 
 
-# HOW TO USE
+## Where everything is
 
-# include > globals.hpp
-    You can still add up to 3 motors in VEX VRC. Declare these motors here.
+### include > globals.hpp
+    Declare any motors here.
 
-# scr > globals.cpp
-    Change the motor port variables based off of whwere they are plugged in
-    Initialize any motors you created
+### scr > globals.cpp
+    Change the motor port variables based off of whwere they are plugged in.
+    Initialize any motors that created

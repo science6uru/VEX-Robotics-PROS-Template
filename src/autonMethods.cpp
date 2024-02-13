@@ -1,4 +1,6 @@
 #include "main.h"
+#include <cmath>
+#include "MiniPID.h"
 
 void translate(int units, int voltage) {
    int direction = abs(units) / units;
@@ -18,23 +20,34 @@ void translate(int units, int voltage) {
 
 void translateInertial(int units, int voltage) {
   //Determine if turn should be left or right
+  double destination = units;
   int direction = abs(units) / units;
+  int distance = getAvgEncoder();
   inertial.reset();
   resetMotorEncoders();
 
   int straightPathNormal = inertial.get_heading();
   
 
-  //TODO Implement PID system using IMU
+  //PID setup
+  MiniPID mpid = MiniPID(0.1, 0.01, 0.05);
+	mpid.setOutputLimits(-100,100);
+	mpid.setOutputRampRate(10);
+  
   int voltage1 = voltage;
   int voltage2 = voltage;
 
   setDrive(voltage * direction, voltage * direction);
   
-  //Loop below until it reaches the target distance (Using encoder values for now)
-  while(getAvgEncoder() < abs(units)) {
+  //Loop below until it reaches the target distance
+  while(destination - distance > 0.1) {
     pros::delay(10);
+    pros::c::imu_accel_s_t accel = inertial.get_accel();
 
+    int acceleration = accel.y; //change me depending on how the IMU is mounted
+    distance = getAvgEncoder();
+
+    //automatically correct a deviating straight path using IMU, in case wheels slip or something minor
     if (inertial.get_heading() > straightPathNormal || inertial.get_heading() < straightPathNormal) {
       if (inertial.get_heading() > straightPathNormal) {
         voltage1 = voltage - 2;
@@ -48,6 +61,17 @@ void translateInertial(int units, int voltage) {
       }
     }
 
+    //Use PID to lower speed as it approaches target distance and optimize for speed and accuracy
+    double output = mpid.getOutput(distance, destination);
+
+    setDrive((voltage1 * output) * direction, (voltage2 * output) * direction );
+
+    }
+    //setDrive(-10 * direction, -10 * direction);
+
+    pros::delay(5);
+    setDrive(0, 0);
+/*
     //Lower drive speed as it approaches target distance
     if (getAvgEncoder() > abs(units) * 0.95) {
       setDrive(voltage1 * 0.1 * direction, voltage2 * 0.1 * direction);
@@ -70,13 +94,7 @@ void translateInertial(int units, int voltage) {
     else {
       setDrive(voltage1 * direction, voltage2 * direction);
     }
-
-  }
-   
-  setDrive(-10 * direction, -10 * direction);
-  pros::delay(10);
-
-  setDrive(0, 0);
+*/
 }
 
 void turnInertial(int degrees, int voltage) {

@@ -1,5 +1,13 @@
 #include "main.h"
 
+void test() {
+  translateInertial(25, 75);
+  turnInertial(90, 75);
+  translateInertial(10, 75);
+  turnInertial(270, 75);
+  translateInertial(15, 75);
+  //end test auton
+}
 
 void redFront() {
   //ENTER YOUR OWN CODE HERE

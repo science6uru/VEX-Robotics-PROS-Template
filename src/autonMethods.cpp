@@ -22,6 +22,7 @@ void translateInertial(int units, int voltage) {
   inertial.reset();
 
   int straightPathNormal = inertial.get_heading();
+  
 
   //TODO Implement PID system using IMU
   int voltage1 = voltage;

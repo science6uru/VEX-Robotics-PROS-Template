@@ -20,6 +20,7 @@ void translateInertial(int units, int voltage) {
   //Determine if turn should be left or right
   int direction = abs(units) / units;
   inertial.reset();
+  resetMotorEncoders();
 
   int straightPathNormal = inertial.get_heading();
   
@@ -30,8 +31,8 @@ void translateInertial(int units, int voltage) {
 
   setDrive(voltage * direction, voltage * direction);
   
-  //Loop below until it reaches the target distance
-  while(inertial.get_heading() > abs(units)) {
+  //Loop below until it reaches the target distance (Using encoder values for now)
+  while(getAvgEncoder() < abs(units)) {
     pros::delay(10);
 
     if (inertial.get_heading() > straightPathNormal || inertial.get_heading() < straightPathNormal) {
@@ -46,7 +47,24 @@ void translateInertial(int units, int voltage) {
         voltage2 = voltage;
       }
     }
-    setDrive(voltage1 * direction, voltage2 * direction);
+
+    //Lower drive speed as it approaches target distance
+    if (getAvgEncoder() > abs(units) * 0.95) {
+      setDrive(voltage1 * 0.1 * direction, voltage2 * 0.1 * direction);
+    }
+    else if (getAvgEncoder() > abs(units) * 0.9) {
+      setDrive(voltage1 * 0.2 * direction, voltage2 * 0.2 * direction);
+    }
+    else if (getAvgEncoder() > abs(units) * 0.7) {
+      setDrive(voltage1 * 0.4 * direction, voltage2 * 0.4 * direction);
+    }
+    else if (getAvgEncoder() > abs(units) * 0.5) {
+      setDrive(voltage1 * 0.8 * direction, voltage2 * 0.8 * direction);
+    }
+    else {
+      setDrive(voltage1 * direction, voltage2 * direction);
+    }
+
   }
    
   setDrive(-10 * direction, -10 * direction);

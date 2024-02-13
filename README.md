@@ -1,4 +1,4 @@
-# Team 5408*'s PROS Repository
+# Team 5408*'s PROS Repository (2024-25)
 Made from a basic template PROS V5 project.
 
 ## Features

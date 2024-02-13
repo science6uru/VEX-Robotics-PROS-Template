@@ -12,6 +12,12 @@ How it's implemented
 - Precision turning and automatic error compensation using global angles during auton
 
 
+TODO
+- Use IMU to make turns more precise during driver control
+- Use IMU to implement and tune PID in autonomous
+- Unify motor encoder data with IMU data to create a more stable movement system
+
+
 
 ## Where everything is
 

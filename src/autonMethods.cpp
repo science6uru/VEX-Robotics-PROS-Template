@@ -17,14 +17,19 @@ void translate(int units, int voltage) {
 }
 
 void translateInertial(int units, int voltage) {
+  //Determine if turn should be left or right
   int direction = abs(units) / units;
   inertial.reset();
 
   int straightPathNormal = inertial.get_heading();
+
+  //TODO Implement PID system using IMU
   int voltage1 = voltage;
   int voltage2 = voltage;
 
   setDrive(voltage * direction, voltage * direction);
+  
+  //Loop below until it reaches the target distance
   while(inertial.get_heading() > abs(units)) {
     pros::delay(10);
 

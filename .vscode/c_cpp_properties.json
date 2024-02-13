@@ -15,10 +15,10 @@
       "cStandard": "gnu11",
       "cppStandard": "gnu++20",
       "intelliSenseMode": "gcc-arm",
-      "compileCommands": "/Users/andrewowen/Desktop/VEX24-25/Team5408ProsRepo/compile_commands.json",
+      "compileCommands": "/Users/andrewowen/Desktop/VEX24-25/Team5408ProsRepo-1/compile_commands.json",
       "browse": {
         "path": [
-          "/Users/andrewowen/Desktop/VEX24-25/Team5408ProsRepo"
+          "/Users/andrewowen/Desktop/VEX24-25/Team5408ProsRepo-1"
         ],
         "limitSymbolsToIncludedHeaders": true,
         "databaseFilename": ""

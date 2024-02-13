@@ -2,7 +2,6 @@
 Made from a basic template PROS V5 project.
 
 ## Features
-stuff you can do
 
 ### Precision control with IMU
 The IMU's internal gyroscope is used for all movement operations, in autonomous and driver control.

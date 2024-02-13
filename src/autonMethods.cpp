@@ -18,12 +18,29 @@ void translate(int units, int voltage) {
 
 void translateInertial(int units, int voltage) {
   int direction = abs(units) / units;
-
   inertial.reset();
+
+  int straightPathNormal = inertial.get_heading();
+  int voltage1 = voltage;
+  int voltage2 = voltage;
 
   setDrive(voltage * direction, voltage * direction);
   while(inertial.get_heading() > abs(units)) {
     pros::delay(10);
+
+    if (inertial.get_heading() > straightPathNormal || inertial.get_heading() < straightPathNormal) {
+      if (inertial.get_heading() > straightPathNormal) {
+        voltage1 = voltage - 2;
+      }
+      else if (inertial.get_heading() < straightPathNormal) {
+        voltage2 = voltage - 2;
+      }
+      else {
+        voltage1 = voltage;
+        voltage2 = voltage;
+      }
+    }
+    setDrive(voltage1 * direction, voltage2 * direction);
   }
    
   setDrive(-10 * direction, -10 * direction);

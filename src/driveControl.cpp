@@ -64,7 +64,7 @@ void setDriveMotors() {
       goingStraight = 1;
     }
 
-    
+
   //If the flag is set to 1 then do the following
   if (goingStraight == 1) {
     //if the robot is deviating, then correct by increasing the power to the side that is deviating

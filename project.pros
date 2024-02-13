@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "new 1",
+    "project_name": "5408-Pros-rdcu",
     "target": "v5",
     "templates": {
       "kernel": {
@@ -302,6 +302,8 @@
         "version": "4.2.0"
       }
     },
-    "upload_options": {}
+    "upload_options": {
+      "description": "Update-rotational-drift-correction"
+    }
   }
 }

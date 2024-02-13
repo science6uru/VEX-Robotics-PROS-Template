@@ -55,11 +55,17 @@ void translateInertial(int units, int voltage) {
     else if (getAvgEncoder() > abs(units) * 0.9) {
       setDrive(voltage1 * 0.2 * direction, voltage2 * 0.2 * direction);
     }
+    else if (getAvgEncoder() > abs(units) * 0.8) {
+      setDrive(voltage1 * 0.3 * direction, voltage2 * 0.3 * direction);
+    }
     else if (getAvgEncoder() > abs(units) * 0.7) {
-      setDrive(voltage1 * 0.4 * direction, voltage2 * 0.4 * direction);
+      setDrive(voltage1 * 0.5 * direction, voltage2 * 0.5 * direction);
+    }
+    else if (getAvgEncoder() > abs(units) * 0.6) {
+      setDrive(voltage1 * 0.8 * direction, voltage2 * 0.8 * direction);
     }
     else if (getAvgEncoder() > abs(units) * 0.5) {
-      setDrive(voltage1 * 0.8 * direction, voltage2 * 0.8 * direction);
+      setDrive(voltage1 * 0.95 * direction, voltage2 * 0.95 * direction);
     }
     else {
       setDrive(voltage1 * direction, voltage2 * direction);

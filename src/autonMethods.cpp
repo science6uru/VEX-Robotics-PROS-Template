@@ -22,31 +22,28 @@ void translateInertial(int units, int voltage) {
   //Determine if turn should be left or right
   double destination = units;
   int direction = abs(units) / units;
-  int distance = getAvgEncoder();
+
   inertial.reset();
   resetMotorEncoders();
-
+  int distance = getAvgEncoder();
   int straightPathNormal = inertial.get_heading();
-  
-
   //PID setup
-  MiniPID mpid = MiniPID(0.1, 0.01, 0.05);
-	mpid.setOutputLimits(-100,100);
+  //https://pidexplained.com/pid-controller-explained/
+  //https://grauonline.de/alexwww/ardumower/pid/pid.html
+  MiniPID mpid = MiniPID(0.2, 7, 1); 
+	mpid.setOutputLimits(-128,127);
 	mpid.setOutputRampRate(10);
   
   int voltage1 = voltage;
   int voltage2 = voltage;
-
   setDrive(voltage * direction, voltage * direction);
   
   //Loop below until it reaches the target distance
   while(destination - distance > 0.1) {
     pros::delay(10);
     pros::c::imu_accel_s_t accel = inertial.get_accel();
-
     int acceleration = accel.y; //change me depending on how the IMU is mounted
     distance = getAvgEncoder();
-
     //automatically correct a deviating straight path using IMU, in case wheels slip or something minor
     if (inertial.get_heading() > straightPathNormal || inertial.get_heading() < straightPathNormal) {
       if (inertial.get_heading() > straightPathNormal) {
@@ -60,17 +57,15 @@ void translateInertial(int units, int voltage) {
         voltage2 = voltage;
       }
     }
-
     //Use PID to lower speed as it approaches target distance and optimize for speed and accuracy
     double output = mpid.getOutput(distance, destination);
-
     setDrive((voltage1 * output) * direction, (voltage2 * output) * direction );
-
     }
+    //End PID loop
     //setDrive(-10 * direction, -10 * direction);
-
     pros::delay(5);
     setDrive(0, 0);
+    //Old deceleration math, no PID
 /*
     //Lower drive speed as it approaches target distance
     if (getAvgEncoder() > abs(units) * 0.95) {

@@ -62,6 +62,7 @@ void translateInertial(int units, int voltage) {
     //double velOutput = mpid.getOutput(acceleration, output);
     setDrive((voltage1 * output) * direction, (voltage2 * output) * direction );
     }
+    mpid.reset();
     //End PID loop
     //setDrive(-10 * direction, -10 * direction);
     pros::delay(5);

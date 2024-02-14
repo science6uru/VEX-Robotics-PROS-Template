@@ -82,7 +82,6 @@ void autonomous() {
 - UN-COMMENT THE METHOD YOU ARE RUNNING												   *
 - ADD ANY SELF CREATED AUTONS YOU HAVE MADE                                            *
 ***************************************************************************************/
-	test();
 	//redFront();
 	//redBack();
 	//redFrontAWP();
@@ -112,6 +111,7 @@ void opcontrol() {
 
 	while(true) {
 		setDriveMotors();
+
 
 		//moveLift();
 		//moveClamp();

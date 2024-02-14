@@ -17,7 +17,8 @@ float right_stick_prev = 0;
 int straightPathNormal = 0;
 int goingStraight = 0;
 
-int deadzone = 10;
+int deadzoneX = 10;
+int deadzoneY = 5;
 int t = 18; //turningCurve --> change to adjust sensitivity of turning
 int d = 2; //drivingCurve --> change to adjust sensitivity of forward / backward movement
 
@@ -45,10 +46,10 @@ void setDriveMotors() {
   power *= powerMultiplier;
 
   //Deadzone check
-  if (abs(power) <= deadzone)
-    setDrive(0, 0);
-  if(abs(direction) <= deadzone)
-    setDrive(0, 0);
+  if (abs(power) <= deadzoneY)
+    power = 0;
+  if(abs(direction) <= deadzoneX)
+    direction = 0;
 
   //smoothing and analog curve equation
 	right_stick_smoothed = ((std::exp(-t / 12.5102293) + std::exp((std::abs(direction) - 132.55) / 69) * (1 - std::exp(-t / 10))) * direction * 0.4) + (right_stick_prev * 0.6);
@@ -64,25 +65,24 @@ void setDriveMotors() {
       goingStraight = 1;
     }
 
-
   //If the flag is set to 1 then do the following
   if (goingStraight == 1) {
     //if the robot is deviating, then correct by increasing the power to the side that is deviating
-    if (inertial.get_heading() > straightPathNormal || inertial.get_heading() < straightPathNormal) {
+    if ((inertial.get_heading() > straightPathNormal || inertial.get_heading() < straightPathNormal) && abs(direction) <= 10 ) {
       //correct for left
       if (inertial.get_heading() > straightPathNormal) {
-        right_stick_smoothed = right_stick_smoothed + 2;
+        right_stick_smoothed = right_stick_smoothed - 3;
         }
       //correct for right
       else if (inertial.get_heading() < straightPathNormal) {
-        right_stick_smoothed = right_stick_smoothed - 2;
+        right_stick_smoothed = right_stick_smoothed + 3;
         }
-      //if the robot is back to normal, set the flag to 0
-      else if (abs(inertial.get_heading() - straightPathNormal) > 5) {
-        goingStraight = 0;
-        }
-      }
     }
+    //if the robot is back to normal, set the flag to 0
+    else if (abs(direction) > 10) {
+      goingStraight = 0;
+    }
+  }
   //end of automatic correction
 
   setDrive(

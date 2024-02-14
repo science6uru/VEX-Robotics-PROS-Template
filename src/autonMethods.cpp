@@ -59,6 +59,7 @@ void translateInertial(int units, int voltage) {
     }
     //Use PID to lower speed as it approaches target distance and optimize for speed and accuracy
     double output = mpid.getOutput(distance, destination);
+    //double velOutput = mpid.getOutput(acceleration, output);
     setDrive((voltage1 * output) * direction, (voltage2 * output) * direction );
     }
     //End PID loop

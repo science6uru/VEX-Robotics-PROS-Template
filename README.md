@@ -16,6 +16,10 @@ TODO
 - Use IMU to implement and tune PID in autonomous
 - Unify motor encoder data with IMU data to create a more stable movement system
 
+### PID
+This project uses MiniPID to calculate autonomous movements to optimize for speed and accuracy.
+
+
 
 
 ## Where everything is

@@ -17,7 +17,7 @@ float right_stick_prev = 0;
 int straightPathNormal = 0;
 int goingStraight = 0;
 
-int deadzoneX = 10;
+int deadzoneX = 7;
 int deadzoneY = 5;
 int t = 18; //turningCurve --> change to adjust sensitivity of turning
 int d = 2; //drivingCurve --> change to adjust sensitivity of forward / backward movement
@@ -61,6 +61,7 @@ void setDriveMotors() {
    //automatically correct a deviating straight path using IMU, in case wheels slip or something minor
   if (direction < deadzone + 5 && direction > -deadzone - 5 && goingStraight == 0) {
     //if the robot is not already correcting itself for a minor deviation, set the heading normal to current IMU heading, set the flag to 1
+      inertial.reset();
       straightPathNormal = inertial.get_rotation();
       goingStraight = 1;
     }
@@ -68,7 +69,7 @@ void setDriveMotors() {
   //If the flag is set to 1 then do the following
   if (goingStraight == 1) {
     //if the robot is deviating, then correct by increasing the power to the side that is deviating
-    if ((inertial.get_rotation()) > straightPathNormal || inertial.get_rotation() < straightPathNormal) && abs(direction) <= 10 ) {
+    if ((inertial.get_rotation()) > straightPathNormal || inertial.get_rotation() < straightPathNormal && abs(direction) <= 10 ) {
       //correct for left
       if (inertial.get_rotation() > straightPathNormal) {
         right_stick_smoothed = right_stick_smoothed - 3;
@@ -79,7 +80,7 @@ void setDriveMotors() {
         }
     }
     //if the robot is back to normal, set the flag to 0
-    else if (abs(direction) > 10) {
+    else if (abs(direction) > 12) {
       goingStraight = 0;
     }
   }

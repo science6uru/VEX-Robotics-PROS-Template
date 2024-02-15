@@ -65,7 +65,6 @@ void setDriveMotors() {
   //automatically correct a deviating straight path using IMU, in case wheels slip or something minor
   if (abs(direction) < deadzoneX && goingStraight == 0) {
     //if the robot is not already correcting itself for a minor deviation, set the heading normal to current IMU heading, set the flag to 1
-      inertial.reset();
       straightPathNormal = inertial.get_rotation();
       goingStraight = 1;
     }

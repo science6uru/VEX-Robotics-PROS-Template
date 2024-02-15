@@ -61,20 +61,20 @@ void setDriveMotors() {
    //automatically correct a deviating straight path using IMU, in case wheels slip or something minor
   if (direction < deadzone + 5 && direction > -deadzone - 5 && goingStraight == 0) {
     //if the robot is not already correcting itself for a minor deviation, set the heading normal to current IMU heading, set the flag to 1
-      straightPathNormal = inertial.get_heading();
+      straightPathNormal = inertial.get_rotation();
       goingStraight = 1;
     }
 
   //If the flag is set to 1 then do the following
   if (goingStraight == 1) {
     //if the robot is deviating, then correct by increasing the power to the side that is deviating
-    if ((inertial.get_heading() > straightPathNormal || inertial.get_heading() < straightPathNormal) && abs(direction) <= 10 ) {
+    if ((inertial.get_rotation()) > straightPathNormal || inertial.get_rotation() < straightPathNormal) && abs(direction) <= 10 ) {
       //correct for left
-      if (inertial.get_heading() > straightPathNormal) {
+      if (inertial.get_rotation() > straightPathNormal) {
         right_stick_smoothed = right_stick_smoothed - 3;
         }
       //correct for right
-      else if (inertial.get_heading() < straightPathNormal) {
+      else if (inertial.get_rotation() < straightPathNormal) {
         right_stick_smoothed = right_stick_smoothed + 3;
         }
     }

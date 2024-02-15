@@ -26,7 +26,7 @@ void translateInertial(int units, int voltage) {
   inertial.reset();
   resetMotorEncoders();
   int distance = getAvgEncoder();
-  int straightPathNormal = inertial.get_heading();
+  int straightPathNormal = inertial.get_rotation();
   //PID setup
   //https://pidexplained.com/pid-controller-explained/
   //https://grauonline.de/alexwww/ardumower/pid/pid.html
@@ -45,11 +45,11 @@ void translateInertial(int units, int voltage) {
     int acceleration = accel.y; //change me depending on how the IMU is mounted
     distance = getAvgEncoder();
     //automatically correct a deviating straight path using IMU, in case wheels slip or something minor
-    if (inertial.get_heading() > straightPathNormal || inertial.get_heading() < straightPathNormal) {
-      if (inertial.get_heading() > straightPathNormal) {
+    if (inertial.get_rotation() > straightPathNormal || inertial.get_rotation() < straightPathNormal) {
+      if (inertial.get_rotation() > straightPathNormal) {
         voltage1 = voltage - 2;
       }
-      else if (inertial.get_heading() < straightPathNormal) {
+      else if (inertial.get_rotation() < straightPathNormal) {
         voltage2 = voltage - 2;
       }
       else {
@@ -98,18 +98,18 @@ void turnInertial(int degrees, int voltage) {
   //Determine if turn should be left or right
   int direction = abs(degrees) / degrees;
   //Calc initial speed from distance to target and voltage cap
-  int speed = voltage * pow(100, 0.01 * abs(abs(inertial.get_heading()) - abs(direction)) / 8) - 0.3;
+  int speed = voltage * pow(100, 0.01 * abs(abs(inertial.get_rotation()) - abs(direction)) / 8) - 0.3;
 
   inertial.reset();
 
   setDrive(speed * direction, speed * -direction);
 
   //Loop below until it reaches the target degree
-  while(inertial.get_heading() > abs(degrees)) {
+  while(inertial.get_rotation() > abs(degrees)) {
     pros::delay(10);
 
     //Lower speed as it approaches target degree. not PID, but has the right effect
-    speed = voltage * pow(100, 0.01 * abs(abs(inertial.get_heading()) - abs(direction)) / 8) - 0.3;
+    speed = voltage * pow(100, 0.01 * abs(abs(inertial.get_rotation()) - abs(direction)) / 8) - 0.3;
     setDrive(speed * direction, speed * -direction);
   }
    

@@ -1,5 +1,7 @@
 #include "main.h"
 
+void init();
+
 void translate(int units, int voltage);
 
 void translateInertial(int units, int voltage);

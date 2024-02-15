@@ -2,6 +2,12 @@
 #include <cmath>
 #include "MiniPID.h"
 
+void init() {
+  inertial.reset();
+  resetMotorEncoders();
+  pros::delay(3500);
+}
+
 void translate(int units, int voltage) {
    int direction = abs(units) / units;
 
@@ -23,7 +29,6 @@ void translateInertial(int units, int voltage) {
   double destination = units;
   int direction = abs(units) / units;
 
-  inertial.reset();
   resetMotorEncoders();
   int distance = getAvgEncoder();
   int straightPathNormal = inertial.get_rotation();
@@ -100,7 +105,7 @@ void turnInertial(int degrees, int voltage) {
   //Calc initial speed from distance to target and voltage cap
   int speed = voltage * pow(100, 0.01 * abs(abs(inertial.get_rotation()) - abs(direction)) / 8) - 0.3;
 
-  inertial.reset();
+  
 
   setDrive(speed * direction, speed * -direction);
 

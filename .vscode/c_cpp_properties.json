@@ -5,7 +5,8 @@
       "includePath": [
         "${workspaceFolder}/**",
         "/Users/andrewowen/Desktop/VEX24-25/Team5408ProsRepo-1/include",
-        "/Users/andrewowen/Desktop/VEX24-25/Team5408ProsRepo/include"
+        "/Users/andrewowen/Desktop/VEX24-25/Team5408ProsRepo/include",
+        "/Users/andrewowen/Team5408ProsRepo/Team5408ProsRepo/include"
       ],
       "defines": [],
       "macFrameworkPath": [
@@ -18,7 +19,7 @@
       "compileCommands": "/Users/andrewowen/Desktop/VEX24-25/Team5408ProsRepo-1/compile_commands.json",
       "browse": {
         "path": [
-          "/Users/andrewowen/Desktop/VEX24-25/Team5408ProsRepo-1"
+          "/Users/andrewowen/Team5408ProsRepo/Team5408ProsRepo"
         ],
         "limitSymbolsToIncludedHeaders": true,
         "databaseFilename": ""

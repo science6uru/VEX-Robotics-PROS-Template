@@ -3,7 +3,8 @@
     {
       "name": "macos-clang-x64",
       "includePath": [
-        "${workspaceFolder}/**"
+        "${workspaceFolder}/**",
+        "/Users/andrewowen/Team5408ProsRepo/Team5408ProsRepo/include"
       ],
       "defines": [],
       "macFrameworkPath": [

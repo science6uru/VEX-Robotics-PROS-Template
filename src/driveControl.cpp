@@ -1,5 +1,5 @@
 #include "main.h"
-#include <MiniPID.h>
+#include "MiniPID.h"
 
 /***************************************************************************************
 - POWER MULTIPLIER INCREASES SPEED OF THE DRIVE. MUILTIPLIER CAPS AT 1                 *
@@ -24,7 +24,7 @@ int t = 18; //turningCurve --> change to adjust sensitivity of turning
 int d = 2; //drivingCurve --> change to adjust sensitivity of forward / backward movement
 
 MiniPID mpid = MiniPID(0.2, 7, 1); 
-mpid.setOutputLimits(-128,127);
+mpid.setOutputLimits(-128.0,127.0);
 mpid.setOutputRampRate(5);
 
 //DRIVE

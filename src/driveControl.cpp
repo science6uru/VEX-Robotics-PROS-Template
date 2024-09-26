@@ -24,8 +24,6 @@ int t = 18; //turningCurve --> change to adjust sensitivity of turning
 int d = 2; //drivingCurve --> change to adjust sensitivity of forward / backward movement
 
 MiniPID mpid = MiniPID(0.2, 7, 1); 
-mpid.setOutputLimits(-128.0,127.0);
-mpid.setOutputRampRate(5);
 
 //DRIVE
 void setDrive(int left, int right) {
@@ -33,6 +31,9 @@ void setDrive(int left, int right) {
   backRight = right;
   frontLeft = left;
   frontRight = right;
+
+  mpid.setOutputLimits(-128.0,127.0);
+  mpid.setOutputRampRate(5);
 }
 
 /*
@@ -97,11 +98,11 @@ void setDriveMotors() {
     if ((inertial.get_rotation()) > straightPathNormal || inertial.get_rotation() < straightPathNormal && abs(direction) <= 10 ) {
       //correct for left
       if (inertial.get_rotation() > straightPathNormal) {
-        right_stick_smoothed = mpid(right_stick_smoothed, right_stick_smoothed - 3);
+        right_stick_smoothed = mpid.getOutput(right_stick_smoothed, right_stick_smoothed - 3);
         }
       //correct for right
       else if (inertial.get_rotation() < straightPathNormal) {
-        right_stick_smoothed = mpid(right_stick_smoothed, right_stick_smoothed + 3);
+        right_stick_smoothed = mpid.getOutput(right_stick_smoothed, right_stick_smoothed + 3);
         }
     }
     //if the robot is back to normal, set the flag to 0

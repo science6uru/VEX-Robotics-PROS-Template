@@ -5,6 +5,8 @@ extern pros::Motor backLeft;
 extern pros::Motor backRight;
 extern pros::Motor frontLeft;
 extern pros::Motor frontRight;
+extern pros::Motor middleLeft;
+extern pros::Motor middleRight;
 
 
 //THIS IS THE LIFT MOTOR

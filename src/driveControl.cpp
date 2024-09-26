@@ -31,6 +31,8 @@ void setDrive(int left, int right) {
   backRight = right;
   frontLeft = left;
   frontRight = right;
+  middleLeft = left;
+  middleRight = right;
 
   mpid.setOutputLimits(-128.0,127.0);
   mpid.setOutputRampRate(5);
@@ -46,14 +48,14 @@ float defaultDriveCurve(float input, float scale) {
 }
 */
 
-double defaultDriveCurve(float x, float scale) {
+float defaultDriveCurve(float x, float scale) {
     float a = -2.2f;
     float b = 303.0f;
     float c = 1.8f;
     float d = -0.5f;
     float g = 3.4f;
     if (x >= 0 && x <= 42.333) {
-        return std::abs((a * std::pow(x, c) - g * x) / (b * std::pow(x, d) + 1));
+        return fabs((a * std::pow(x, c) - g * x) / (b * powf(x, d) + 1));
     } else if (x > 42.333 && x <= 127) {
         return x;
     } else {
@@ -166,19 +168,22 @@ void resetMotorEncoders() {
   backRight.tare_position();
   frontRight.tare_position();
   frontLeft.tare_position();
+  middleRight.tare_position();
+  middleLeft.tare_position();
 }
 
 double getRightEncoder() {
-  return (fabs(backRight.get_position()) + fabs(frontRight.get_position())) / 2;
+  return (fabs(backRight.get_position()) + fabs(frontRight.get_position()) + fabs(middleRight.get_position())) / 3;
 }
 
 double getLeftEncoder() {
-  return (fabs(frontLeft.get_position()) + fabs(backLeft.get_position())) / 2;
+  return (fabs(frontLeft.get_position()) + fabs(backLeft.get_position())+ fabs(middleLeft.get_position())) / 3;
 }
 
 double getAvgEncoder() {
   return (fabs(backRight.get_position()) + fabs(backLeft.get_position()) +
-         fabs(frontRight.get_position()) + fabs(frontLeft.get_position())) / 4;
+         fabs(frontRight.get_position()) + fabs(frontLeft.get_position()) + 
+         fabs(middleRight.get_position()) + + fabs(middleLeft.get_position())) / 6;
 }
 
 

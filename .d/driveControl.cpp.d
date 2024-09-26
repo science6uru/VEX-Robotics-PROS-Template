@@ -192,7 +192,7 @@ bin/driveControl.cpp.o: src/driveControl.cpp include/main.h include/api.h \
  include/okapi/api/units/QTorque.hpp include/okapi/api/units/QVolume.hpp \
  include/okapi/impl/util/rate.hpp include/pros/api_legacy.h \
  include/driverControl.hpp include/main.h include/autonControl.hpp \
- include/globals.hpp include/autonMethods.hpp
+ include/globals.hpp include/autonMethods.hpp include/MiniPID.h
 include/main.h:
 include/api.h:
 include/pros/adi.h:
@@ -474,3 +474,4 @@ include/main.h:
 include/autonControl.hpp:
 include/globals.hpp:
 include/autonMethods.hpp:
+include/MiniPID.h:

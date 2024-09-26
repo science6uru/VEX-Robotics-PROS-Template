@@ -1,21 +1,18 @@
 {
   "configurations": [
     {
-      "name": "Mac",
+      "name": "macos-clang-x64",
       "includePath": [
-        "${workspaceFolder}/**",
-        "/Users/andrewowen/Desktop/VEX24-25/Team5408ProsRepo-1/include",
-        "/Users/andrewowen/Desktop/VEX24-25/Team5408ProsRepo/include",
-        "/Users/andrewowen/Team5408ProsRepo/Team5408ProsRepo/include"
+        "${workspaceFolder}/**"
       ],
       "defines": [],
       "macFrameworkPath": [
         "/System/Library/Frameworks"
       ],
-      "compilerPath": "/Users/andrewowen/Library/Application Support/Code/User/globalStorage/sigbots.pros/install/pros-toolchain-macos/bin/arm-none-eabi-g++",
-      "cStandard": "gnu11",
-      "cppStandard": "gnu++20",
-      "intelliSenseMode": "gcc-arm",
+      "compilerPath": "/usr/bin/clang",
+      "cStandard": "${default}",
+      "cppStandard": "${default}",
+      "intelliSenseMode": "macos-clang-x64",
       "compileCommands": "/Users/andrewowen/Desktop/VEX24-25/Team5408ProsRepo-1/compile_commands.json",
       "browse": {
         "path": [

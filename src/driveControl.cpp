@@ -1,4 +1,5 @@
 #include "main.h"
+#include <MiniPID.h>
 
 /***************************************************************************************
 - POWER MULTIPLIER INCREASES SPEED OF THE DRIVE. MUILTIPLIER CAPS AT 1                 *
@@ -34,6 +35,7 @@ void setDrive(int left, int right) {
   frontRight = right;
 }
 
+/*
 float defaultDriveCurve(float input, float scale) {
     if (scale != 0) {
         return (powf(2.718, -(scale / 10)) + powf(2.718, (fabs(input) - 127) / 10) * (1 - powf(2.718, -(scale / 10)))) *
@@ -41,6 +43,26 @@ float defaultDriveCurve(float input, float scale) {
     }
     return input;
 }
+*/
+
+double defaultDriveCurve(float x, float scale) {
+    float a = -2.2f;
+    float b = 303.0f;
+    float c = 1.8f;
+    float d = -0.5f;
+    float g = 3.4f;
+    if (x >= 0 && x <= 42.333) {
+        return std::abs((a * std::pow(x, c) - g * x) / (b * std::pow(x, d) + 1));
+    } else if (x > 42.333 && x <= 127) {
+        return x;
+    } else {
+        // Handle case if x is out of bounds, if necessary
+        // You could throw an error or return a default value
+        return -1; // Example: Return -1 for out-of-bounds
+    }
+}
+
+
 
 void setDriveMotors() {
 

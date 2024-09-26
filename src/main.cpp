@@ -26,7 +26,7 @@ void initialize() {
 	 */
 
 	pros::lcd::initialize();
-	pros::lcd::set_text(1, "HELLO");
+	pros::lcd::set_text(1, "life is roblox");
 	pros::lcd::register_btn1_cb(on_center_button);
 
 	backLeft.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);

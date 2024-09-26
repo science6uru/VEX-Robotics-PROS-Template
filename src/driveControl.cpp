@@ -34,11 +34,9 @@ void setDrive(int left, int right) {
   middleLeft = left;
   middleRight = right;
 
-  mpid.setOutputLimits(-128.0,127.0);
-  mpid.setOutputRampRate(5);
 }
 
-/*
+
 float defaultDriveCurve(float input, float scale) {
     if (scale != 0) {
         return (powf(2.718, -(scale / 10)) + powf(2.718, (fabs(input) - 127) / 10) * (1 - powf(2.718, -(scale / 10)))) *
@@ -46,26 +44,30 @@ float defaultDriveCurve(float input, float scale) {
     }
     return input;
 }
-*/
-
+/*
 float defaultDriveCurve(float x, float scale) {
     float a = -2.2f;
     float b = 303.0f;
     float c = 1.8f;
     float d = -0.5f;
     float g = 3.4f;
-    if (x >= 0 && x <= 42.333) {
-        return fabs((a * std::pow(x, c) - g * x) / (b * powf(x, d) + 1));
-    } else if (x > 42.333 && x <= 127) {
-        return x;
-    } else {
-        // Handle case if x is out of bounds, if necessary
-        // You could throw an error or return a default value
-        return -1; // Example: Return -1 for out-of-bounds
+    bool negative = false;
+    float outval = 0;
+
+    if (x < 0) {
+        negative = true;
     }
+    if (x >= 0 && x <= 42.333) {
+        outval = fabs((a * std::pow(x, c) - g * x) / (b * powf(x, d) + 1));
+    } else if (x > 42.333 && x <= 127) {
+        outval = x;
+    }
+    if (negative) {
+        outval = outval * -1;
+    }
+    return outval;
 }
-
-
+*/
 
 void setDriveMotors() {
 
@@ -100,11 +102,11 @@ void setDriveMotors() {
     if ((inertial.get_rotation()) > straightPathNormal || inertial.get_rotation() < straightPathNormal && abs(direction) <= 10 ) {
       //correct for left
       if (inertial.get_rotation() > straightPathNormal) {
-        right_stick_smoothed = mpid.getOutput(right_stick_smoothed, right_stick_smoothed - 3);
+        right_stick_smoothed = right_stick_smoothed;
         }
       //correct for right
       else if (inertial.get_rotation() < straightPathNormal) {
-        right_stick_smoothed = mpid.getOutput(right_stick_smoothed, right_stick_smoothed + 3);
+        right_stick_smoothed = right_stick_smoothed;
         }
     }
     //if the robot is back to normal, set the flag to 0

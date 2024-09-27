@@ -36,7 +36,7 @@ void setDrive(int left, int right) {
 
 }
 
-
+/*
 float defaultDriveCurve(float input, float scale) {
     if (scale != 0) {
         return (powf(2.718, -(scale / 10)) + powf(2.718, (fabs(input) - 127) / 10) * (1 - powf(2.718, -(scale / 10)))) *
@@ -44,7 +44,8 @@ float defaultDriveCurve(float input, float scale) {
     }
     return input;
 }
-/*
+*/
+
 float defaultDriveCurve(float x, float scale) {
     float a = -2.2f;
     float b = 303.0f;
@@ -56,6 +57,7 @@ float defaultDriveCurve(float x, float scale) {
 
     if (x < 0) {
         negative = true;
+        x = fabs(x);
     }
     if (x >= 0 && x <= 42.333) {
         outval = fabs((a * std::pow(x, c) - g * x) / (b * powf(x, d) + 1));
@@ -67,7 +69,6 @@ float defaultDriveCurve(float x, float scale) {
     }
     return outval;
 }
-*/
 
 void setDriveMotors() {
 

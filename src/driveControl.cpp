@@ -16,7 +16,7 @@ int left_stick_smoothed = 0;
 float left_stick_prev = 0;
 float right_stick_prev = 0;
 int straightPathVector = 0;
-int goingStraight = 0;
+bool goingStraight = false;
 
 int deadzoneX = 10;
 int deadzoneY = 5;
@@ -91,28 +91,28 @@ void setDriveMotors() {
 	//end smoothing
 
   //automatically correct a deviating straight path using IMU, in case wheels slip or something minor
-  if (abs(direction) < deadzoneX && goingStraight == 0) {
+  if (abs(direction) < deadzoneX && goingStraight == false) {
     //if the robot is not already correcting itself for a minor deviation, set the heading normal to current IMU heading, set the flag to 1
       straightPathVector = inertial.get_rotation();
-      goingStraight = 1;
+      goingStraight = true;
     }
 
   //If the flag is set to 1 then do the following
-  if (goingStraight == 1) {
+  if (goingStraight == true) {
     //if the robot is deviating, then correct by increasing the power to the side that is deviating
     if ((inertial.get_rotation()) > straightPathVector || inertial.get_rotation() < straightPathVector && abs(direction) <= 10 ) {
       //correct for left
       if (inertial.get_rotation() > straightPathVector) {
-        right_stick_smoothed = right_stick_smoothed;
+        right_stick_smoothed = right_stick_smoothed - 5;
         }
       //correct for right
       else if (inertial.get_rotation() < straightPathVector) {
-        right_stick_smoothed = right_stick_smoothed;
+        right_stick_smoothed = right_stick_smoothed + 5;
         }
     }
     //if the robot is back to normal, set the flag to 0
-    else if (abs(direction) > 5) {
-      goingStraight = 0;
+    else if (abs(direction) > 45) {
+      goingStraight = false;
     }
   }
   //end of automatic correction

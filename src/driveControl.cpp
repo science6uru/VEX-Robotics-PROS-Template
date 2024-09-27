@@ -15,7 +15,7 @@ int right_stick_smoothed = 0;
 int left_stick_smoothed = 0;
 float left_stick_prev = 0;
 float right_stick_prev = 0;
-int straightPathNormal = 0;
+int straightPathVector = 0;
 int goingStraight = 0;
 
 int deadzoneX = 10;
@@ -60,8 +60,8 @@ float defaultDriveCurve(float x, float scale) {
         x = fabs(x);
     }
     if (x >= 0 && x <= 42.333) {
-        outval = fabs((a * std::pow(x, c) - g * x) / (b * powf(x, d) + 1));
-    } else if (x > 42.333 && x <= 127) {
+        outval = fabs((a * powf(x, c) - g * x) / (b * powf(x, d) + 1));
+    } else if (x > 42.333) {
         outval = x;
     }
     if (negative) {
@@ -93,25 +93,25 @@ void setDriveMotors() {
   //automatically correct a deviating straight path using IMU, in case wheels slip or something minor
   if (abs(direction) < deadzoneX && goingStraight == 0) {
     //if the robot is not already correcting itself for a minor deviation, set the heading normal to current IMU heading, set the flag to 1
-      straightPathNormal = inertial.get_rotation();
+      straightPathVector = inertial.get_rotation();
       goingStraight = 1;
     }
 
   //If the flag is set to 1 then do the following
   if (goingStraight == 1) {
     //if the robot is deviating, then correct by increasing the power to the side that is deviating
-    if ((inertial.get_rotation()) > straightPathNormal || inertial.get_rotation() < straightPathNormal && abs(direction) <= 10 ) {
+    if ((inertial.get_rotation()) > straightPathVector || inertial.get_rotation() < straightPathVector && abs(direction) <= 10 ) {
       //correct for left
-      if (inertial.get_rotation() > straightPathNormal) {
+      if (inertial.get_rotation() > straightPathVector) {
         right_stick_smoothed = right_stick_smoothed;
         }
       //correct for right
-      else if (inertial.get_rotation() < straightPathNormal) {
+      else if (inertial.get_rotation() < straightPathVector) {
         right_stick_smoothed = right_stick_smoothed;
         }
     }
     //if the robot is back to normal, set the flag to 0
-    else if (abs(direction) > 12) {
+    else if (abs(direction) > 5) {
       goingStraight = 0;
     }
   }
@@ -180,7 +180,7 @@ double getRightEncoder() {
 }
 
 double getLeftEncoder() {
-  return (fabs(frontLeft.get_position()) + fabs(backLeft.get_position())+ fabs(middleLeft.get_position())) / 3;
+  return (fabs(frontLeft.get_position()) + fabs(backLeft.get_position()) + fabs(middleLeft.get_position())) / 3;
 }
 
 double getAvgEncoder() {

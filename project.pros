@@ -303,7 +303,8 @@
       }
     },
     "upload_options": {
-      "description": "Update-rotational-drift-correction"
+      "description": "Update-rotational-drift-correction",
+      "slot": 2
     }
   }
 }

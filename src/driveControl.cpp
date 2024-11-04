@@ -31,8 +31,6 @@ void setDrive(int left, int right) {
   backRight = right;
   frontLeft = left;
   frontRight = right;
-  middleLeft = left;
-  middleRight = right;
 
 }
 
@@ -94,6 +92,7 @@ void setDriveMotors() {
   if (abs(direction) < deadzoneX && goingStraight == false) {
     //if the robot is not already correcting itself for a minor deviation, set the heading normal to current IMU heading, set the flag to 1
       straightPathVector = inertial.get_rotation();
+      printf("%d", straightPathVector);
       goingStraight = true;
     }
 
@@ -111,7 +110,7 @@ void setDriveMotors() {
         }
     }
     //if the robot is back to normal, set the flag to 0
-    else if (abs(direction) > 45) {
+    else if (abs(direction) > 65) {
       goingStraight = false;
     }
   }
@@ -171,22 +170,19 @@ void resetMotorEncoders() {
   backRight.tare_position();
   frontRight.tare_position();
   frontLeft.tare_position();
-  middleRight.tare_position();
-  middleLeft.tare_position();
 }
 
 double getRightEncoder() {
-  return (fabs(backRight.get_position()) + fabs(frontRight.get_position()) + fabs(middleRight.get_position())) / 3;
+  return (fabs(backRight.get_position()) + fabs(frontRight.get_position())) / 2;
 }
 
 double getLeftEncoder() {
-  return (fabs(frontLeft.get_position()) + fabs(backLeft.get_position()) + fabs(middleLeft.get_position())) / 3;
+  return (fabs(frontLeft.get_position()) + fabs(backLeft.get_position())) / 2;
 }
 
 double getAvgEncoder() {
   return (fabs(backRight.get_position()) + fabs(backLeft.get_position()) +
-         fabs(frontRight.get_position()) + fabs(frontLeft.get_position()) + 
-         fabs(middleRight.get_position()) + + fabs(middleLeft.get_position())) / 6;
+         fabs(frontRight.get_position()) + fabs(frontLeft.get_position())) / 4;
 }
 
 

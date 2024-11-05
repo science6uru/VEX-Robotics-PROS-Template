@@ -23,3 +23,11 @@ extern pros::ADIDigitalOut piston;
 extern pros::Imu inertial;
 
 extern pros::Controller controller;
+
+#ifdef MOTOR_CONFIG_D
+extern pros::Motor* leftMotors[2];
+extern pros::Motor* rightMotors[2];
+#else
+extern pros::Motor* leftMotors[2];
+extern pros::Motor* rightMotors[2];
+#endif

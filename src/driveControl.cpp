@@ -15,7 +15,7 @@ int right_stick_smoothed = 0;
 int left_stick_smoothed = 0;
 float left_stick_prev = 0;
 float right_stick_prev = 0;
-int straightPathVector = 0;
+double targetHeading = 0.0;
 bool goingStraight = false;
 
 int deadzoneX = 10;
@@ -27,11 +27,12 @@ MiniPID mpid = MiniPID(0.2, 7, 1);
 
 //DRIVE
 void setDrive(int left, int right) {
-  backLeft = left;
-  backRight = right;
-  frontLeft = left;
-  frontRight = right;
-
+  for(pros::Motor* lm: leftMotors) {
+    lm->move(left);
+  }
+  for(pros::Motor* rm: rightMotors) {
+    rm->move(right);
+  }
 }
 
 /*
@@ -69,25 +70,35 @@ float defaultDriveCurve(float x, float scale) {
 }
 
 void setDriveMotors() {
-
+  double turnSens = 0.025;
   double power = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-  double direction = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+  double rightStick = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+  double currentHeading = inertial.get_rotation();
 
   power *= powerMultiplier;
 
   //Deadzone check
   if (abs(power) <= deadzoneY)
     power = 0;
-  if(abs(direction) <= deadzoneX)
-    direction = 0;
+  if(abs(rightStick) <= deadzoneX)
+    rightStick = 0;
 
   //smoothing and analog curve equation
-	right_stick_smoothed = ((std::exp(-t / 12.5102293) + std::exp((std::abs(direction) - 132.55) / 69) * (1 - std::exp(-t / 10))) * direction * 0.4) + (right_stick_prev * 0.6);
-	left_stick_smoothed =  ((std::exp(-d / 10) + std::exp((std::abs(power) - 100) / 10) * (1 - std::exp(-d / 10))) * power * 0.4) + (left_stick_prev * 0.6);
+	right_stick_smoothed = ((std::exp(-t / 12.5102293) + std::exp((std::abs(rightStick) - 132.55) / 69) * (1 - std::exp(-t / 10))) * rightStick * 0.4) + (right_stick_prev * 0.6);
+	left_stick_smoothed = ((std::exp(-d / 10) + std::exp((std::abs(power) - 100) / 10) * (1 - std::exp(-d / 10))) * power * 0.4) + (left_stick_prev * 0.6);
 	right_stick_prev = right_stick_smoothed;
 	left_stick_prev = left_stick_smoothed;
 	//end smoothing
 
+  targetHeading += turnSens * right_stick_smoothed;
+  double dAngle = targetHeading - currentHeading;
+
+  right_stick_smoothed = dAngle;
+  
+  controller.print(1,1,"curr: %s, target: %s", currentHeading, targetHeading);
+
+
+/*
   //automatically correct a deviating straight path using IMU, in case wheels slip or something minor
   if (abs(direction) < deadzoneX && goingStraight == false) {
     //if the robot is not already correcting itself for a minor deviation, set the heading normal to current IMU heading, set the flag to 1
@@ -110,18 +121,18 @@ void setDriveMotors() {
         }
     }
     //if the robot is back to normal, set the flag to 0
-    else if (abs(direction) > 65) {
+    else if (abs(direction) > deadzoneX + 15) {
       goingStraight = false;
     }
   }
   //end of automatic correction
+  */
 
   setDrive(
     defaultDriveCurve(left_stick_smoothed + right_stick_smoothed, 4),
     defaultDriveCurve(left_stick_smoothed - right_stick_smoothed, 4)
     );
 
-  //todo: implement a functionality to automatically correct a straight path using IMU, in case wheels slip or something
 }
 
 
@@ -166,23 +177,36 @@ void moveClamp() {
 
 
 void resetMotorEncoders() {
-  backLeft.tare_position();
-  backRight.tare_position();
-  frontRight.tare_position();
-  frontLeft.tare_position();
+  for(pros::Motor* lm: leftMotors) {
+    lm->tare_position();
+  }
+  for(pros::Motor* rm: rightMotors) {
+    rm->tare_position();
+  }
 }
 
 double getRightEncoder() {
-  return (fabs(backRight.get_position()) + fabs(frontRight.get_position())) / 2;
+  double sum = 0;
+
+  for(pros::Motor* rm: rightMotors) {
+    sum += (rm->get_position());
+  }
+
+  return sum / (double)(sizeof(rightMotors) / sizeof(rightMotors[0]));
 }
 
 double getLeftEncoder() {
-  return (fabs(frontLeft.get_position()) + fabs(backLeft.get_position())) / 2;
+  double sum = 0;
+
+  for(pros::Motor* rm: leftMotors) {
+    sum += (rm->get_position());
+  }
+  
+  return sum / (double)(sizeof(leftMotors) / sizeof(leftMotors[0]));
 }
 
 double getAvgEncoder() {
-  return (fabs(backRight.get_position()) + fabs(backLeft.get_position()) +
-         fabs(frontRight.get_position()) + fabs(frontLeft.get_position())) / 4;
+  return getLeftEncoder() + getRightEncoder() / 2;
 }
 
 

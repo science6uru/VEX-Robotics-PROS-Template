@@ -14,6 +14,7 @@
 
 #ifndef _PROS_MAIN_H_
 #define _PROS_MAIN_H_
+//#define MOTOR_CONFIG_D
 
 /**
  * If defined, some commonly used enums will have preprocessor macros which give

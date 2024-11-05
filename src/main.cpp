@@ -112,8 +112,6 @@ void opcontrol() {
 	inertial.reset();
 	
 
-
-
 	while(true) {
 		setDriveMotors();
 
